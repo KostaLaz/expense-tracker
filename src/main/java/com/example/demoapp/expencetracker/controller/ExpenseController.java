@@ -25,7 +25,7 @@ public class ExpenseController {
 
     @DeleteMapping("/expenses")
     ResponseEntity<?> deleteExpense(@PathVariable Long id){
-         expenseRepository.deleteById();
+         expenseRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
