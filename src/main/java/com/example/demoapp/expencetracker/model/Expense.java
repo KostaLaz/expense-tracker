@@ -12,7 +12,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Expence {
+public class Expense {
 
     @Id
     private long id;
@@ -20,6 +20,8 @@ public class Expence {
     private Instant expenceDate;
 
     private String destription;
+
+    private String location;
 
     @ManyToOne
     private Category category;
