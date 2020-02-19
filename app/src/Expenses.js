@@ -3,7 +3,7 @@ import AppNav from './AppNav';
 import './App.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Container, FormGroup, Form, Button, Input } from 'reactstrap';
+import {Table, Container, FormGroup, Form, Button, Input } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 
@@ -12,7 +12,7 @@ class Expenses extends Component {
     emptyItem = {
       id: '103',
       expenseDate: new Date(),
-      description: '',
+      description: 'Test',
       location: '',
       category: [1, 'Travel']
     }
@@ -21,30 +21,47 @@ class Expenses extends Component {
         super(props)
 
         this.state = { 
-
             date: new Date(),
             isLoading: true,
             expenses: [],
             categories: [],
             item: this.emptyItem
-       
             }
     }
 
+
+    async remove(id){
+        await fetch(`/api/expenses/${id}` , {
+          method: 'DELETE' ,
+          headers : {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/json'
+          }
+
+        }).then(() => {
+          let updatedExpenses = [...this.state.expenses].filter(i => i.id !== id);
+          this.setState({expenses : updatedExpenses});
+        });
+
+    }
   
 
      async componentDidMount(){
          const response = await fetch ('/api/categories');
          const body = await response.json();
-
          this.setState({categories: body, isLoading: false});
+
+         const responseExspenses = await fetch ('/api/expenses');
+         const bodyExpenses = await responseExspenses.json();
+         this.setState({expenses: bodyExpenses, isLoading: false});
      }
     
 
     render() { 
 
         const title  = <h3>Add Expense</h3>;
-        const {categories, isLoading} = this.state;
+        const {categories} = this.state;
+        const {expenses, isLoading} = this.state;
 
         if(isLoading)
           return(<div>Loadig...</div>)
@@ -54,6 +71,17 @@ class Expenses extends Component {
               <option id = {category.id}>
                   {category.name}
               </option>)
+
+              let rows = 
+                  expenses.map(expense =>
+                    <tr>
+                        <td>{expense.description}</td>
+                        <td>{expense.location}</td>
+                        <td>{expense.expenseDate}</td>
+                        <td>{expense.category.name}</td>
+                        <td><Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Delete</Button></td> 
+        
+                    </tr>)
 
               
 
@@ -74,11 +102,10 @@ class Expenses extends Component {
                       <FormGroup>
                           <label for="category">Category</label>
 
-                          <select>
+                          <select name="category" id="category" onChange={this.handleChange}>
                               {optionList}
                           </select>
                           
-                          <input type="text" name="category" id="category" onChange={this.handleChange}/>
                       </FormGroup>
 
                       <FormGroup>
@@ -101,6 +128,29 @@ class Expenses extends Component {
 
                       
                     </Form>
+                </Container>
+
+                <Container>
+            
+                  <h3>Expense List</h3>
+
+                    <Table className="mt-4">
+
+                   <thead>  
+                    <tr>       
+                        <th width="20%">Description</th>
+                        <th width="20%">Location</th>
+                        <th width="20%">Date</th>
+                        <th width="20">Category</th>
+                        <th width="20%">Actions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                        {rows}
+                    </tbody>
+                    </Table>
+
                 </Container>
             </div>
           );

@@ -18,9 +18,9 @@ public class Expense {
     @Id
     private long id;
 
-    private Instant expenceDate;
+    private Instant expenseDate;
 
-    private String destription;
+    private String description;
 
     private String location;
 
