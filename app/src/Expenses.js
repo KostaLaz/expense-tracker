@@ -8,14 +8,30 @@ import { Link } from 'react-router-dom';
 
 
 class Expenses extends Component {
-    state = { 
 
-     date: new Date(),
-     isLoading: true,
-     expenses: [],
-     categories: []
+    emptyItem = {
+      id: '103',
+      expenseDate: new Date(),
+      description: '',
+      location: '',
+      category: [1, 'Travel']
+    }
 
-     }
+    constructor(props){
+        super(props)
+
+        this.state = { 
+
+            date: new Date(),
+            isLoading: true,
+            expenses: [],
+            categories: [],
+            item: this.emptyItem
+       
+            }
+    }
+
+  
 
      async componentDidMount(){
          const response = await fetch ('/api/categories');

@@ -23,7 +23,13 @@ public class ExpenseController {
         return expenseRepository.findAll(); //SELECT * FROM expenses
     }
 
-    @DeleteMapping("/expenses")
+    @PutMapping("/expenses")
+     ResponseEntity<Expense> updateExpense(@Valid @RequestBody Expense expense){
+        Expense result = expenseRepository.save(expense);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @DeleteMapping("/expenses/{id}")
     ResponseEntity<?> deleteExpense(@PathVariable Long id){
          expenseRepository.deleteById(id);
         return ResponseEntity.ok().build();
