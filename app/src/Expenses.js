@@ -27,7 +27,37 @@ class Expenses extends Component {
             categories: [],
             item: this.emptyItem
             }
+
+        this.handleSubmit = this.handleSubmit.bind(this);  //When the constuctor gets called we automatically 
+                                                          // with this object onSubmit
     }
+
+    async handleSubmit(event){
+       event.preventDafoult(); //Prevent auto Submit
+       const {item} = this.state; // Creating a copy of 
+       
+       await fetch('api/expenses', {
+
+         method: 'POST',
+         headers: {
+           'Accept': 'application/json',
+           'Content-Type': 'applicetion/json'
+         },
+         body: JSON.stringify(this.item),  //Converting the values of the item variable into JSON
+
+       });
+          console.log(this.state);
+
+          this.props.history.push("/expenses");   //Go back to the /expense route
+
+    }
+
+
+    
+
+
+
+
 
 
     async remove(id){
@@ -68,13 +98,13 @@ class Expenses extends Component {
 
           let optionList =  
             categories.map(category =>
-              <option id = {category.id}>
+              <option value = {category.id} key={category.id}>
                   {category.name}
               </option>)
 
               let rows = 
                   expenses.map(expense =>
-                    <tr>
+                    <tr value={expense.id} key={expense.id}>
                         <td>{expense.description}</td>
                         <td>{expense.location}</td>
                         <td>{expense.expenseDate}</td>
