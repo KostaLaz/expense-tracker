@@ -11,7 +11,7 @@ import Moment from 'react-moment';
 class Expenses extends Component {
 
     emptyItem = {
-      id: Math.floor(Math.random * 1000),
+      id: 104,
       expenseDate: new Date(),
       description: '',
       location: '',
@@ -35,7 +35,7 @@ class Expenses extends Component {
     }
 
     async handleSubmit(event){
-       event.preventDafoult(); //Prevent auto Submit
+       
        const item = this.state; // Creating a copy of 
        
        await fetch('api/expenses', {
@@ -49,7 +49,7 @@ class Expenses extends Component {
 
        });
           console.log(this.state);
-
+          event.preventDefault();
           this.props.history.push("/expenses");   //Go back to the /expense route
 
     }
@@ -137,12 +137,12 @@ class Expenses extends Component {
 
                     <Form onSubmit={this.handleSubmit}>
                       <FormGroup>
-                          <label for="title">Title</label>
+                          <label htmlFor ="title">Title</label>
                           <input type="text" name="title" id="title" onChange={this.handleChange}/>
                       </FormGroup>
 
                       <FormGroup>
-                          <label for="category">Category</label>
+                          <label htmlFor ="category">Category</label>
 
                           <select name="category" id="category" onChange={this.handleChange}>
                               {optionList}
@@ -151,13 +151,13 @@ class Expenses extends Component {
                       </FormGroup>
 
                       <FormGroup>
-                          <label for="city">Date</label>
+                          <label htmlFor ="city">Date</label>
                           <DatePicker selected={this.state.item.expenseDate} onChange={this.handleDateChange}/>
                       </FormGroup>
 
                     <div className="row">
                       <FormGroup className="col-md-4-sb-3">
-                          <label for="location">Location</label>
+                          <label htmlFor ="location">Location</label>
                           <input type="text" name="location" id="location" onChange={this.handleChange}/>
                       </FormGroup>
                       </div>
