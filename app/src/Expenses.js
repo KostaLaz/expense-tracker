@@ -60,7 +60,7 @@ class Expenses extends Component {
       let item = {...this.state.item};
       item[name] = value;
       this.setState({item});
-      console.log(state);
+      console.log(this.state.item);
 
         }
 
@@ -68,6 +68,7 @@ class Expenses extends Component {
         let item = {...this.state.item};
         item.expenseDate = date;
         this.setState({item});
+        console.log(item);
         }
 
     async remove(id){
@@ -150,7 +151,7 @@ class Expenses extends Component {
 
                       <FormGroup>
                           <label for="city">Date</label>
-                          <DatePicker selected={this.state.date} onChange={this.handleDateChange}/>
+                          <DatePicker selected={this.state.item.expenseDate} onChange={this.handleDateChange}/>
                       </FormGroup>
 
                     <div className="row">
