@@ -27,9 +27,10 @@ class Expenses extends Component {
             categories: [],
             item: this.emptyItem
             }
-
-        this.handleSubmit = this.handleSubmit.bind(this);  //When the constuctor gets called we automatically 
-                                                          // with this object onSubmit
+        //When the constuctor gets called we automatically with this object onSubmit
+        this.handleSubmit = this.handleSubmit.bind(this);   
+        this.handleChange = this.handleChange.bind(this);     
+        this.handleDateChange = this.handleDateChange.bind(this);
     }
 
     async handleSubmit(event){
@@ -58,15 +59,16 @@ class Expenses extends Component {
       const name = target.name;
       let item = {...this.state.item};
       item[name] = value;
+      this.setState({item});
+      console.log(state);
 
         }
 
-
-
-
-
-
-
+      async handleDateChange(date){
+        let item = {...this.state.item};
+        item.expenseDate = date;
+        this.setState({item});
+        }
 
     async remove(id){
         await fetch(`/api/expenses/${id}` , {
@@ -148,7 +150,7 @@ class Expenses extends Component {
 
                       <FormGroup>
                           <label for="city">Date</label>
-                          <DatePicker selected={this.state.date} onChange={this.handleChange}/>
+                          <DatePicker selected={this.state.date} onChange={this.handleDateChange}/>
                       </FormGroup>
 
                     <div className="row">
