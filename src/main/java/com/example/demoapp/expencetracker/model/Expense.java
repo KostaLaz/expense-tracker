@@ -16,6 +16,7 @@ import java.time.Instant;
 public class Expense {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     private Instant expenseDate;

@@ -5,14 +5,15 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {Table, Container, FormGroup, Form, Button, Input } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
 
 
 class Expenses extends Component {
 
     emptyItem = {
-      id: '103',
+      id: Math.floor(Math.random * 1000),
       expenseDate: new Date(),
-      description: 'Test',
+      description: '',
       location: '',
       category: [1, 'Travel']
     }
@@ -35,7 +36,7 @@ class Expenses extends Component {
 
     async handleSubmit(event){
        event.preventDafoult(); //Prevent auto Submit
-       const {item} = this.state; // Creating a copy of 
+       const item = this.state; // Creating a copy of 
        
        await fetch('api/expenses', {
 
@@ -118,7 +119,7 @@ class Expenses extends Component {
                     <tr value={expense.id} key={expense.id}>
                         <td>{expense.description}</td>
                         <td>{expense.location}</td>
-                        <td>{expense.expenseDate}</td>
+                        <td><Moment date={expense.expenseDate} format="DD/MM/YYYY"/></td>
                         <td>{expense.category.name}</td>
                         <td><Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Delete</Button></td> 
         
