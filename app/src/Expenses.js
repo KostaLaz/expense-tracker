@@ -52,8 +52,16 @@ class Expenses extends Component {
 
     }
 
+    async handleChange(event){
+      const target = event.target;
+      const value = target.value;
+      const name = target.name;
+      let item = {...this.state.item};
+      item[name] = value;
 
-    
+        }
+
+
 
 
 
