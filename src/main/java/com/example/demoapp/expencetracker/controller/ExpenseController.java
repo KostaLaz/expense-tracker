@@ -36,6 +36,7 @@ public class ExpenseController {
     }
 
     @PostMapping("expenses")
+    @CrossOrigin(origins = "http://localhost:3000")
     ResponseEntity<Expense> creteExpense(@Valid @RequestBody Expense expense) throws URISyntaxException{
          Expense result = expenseRepository.save(expense);
          return ResponseEntity.created(new URI("/api/expenses/" + result.getId())).body(result);

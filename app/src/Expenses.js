@@ -15,7 +15,7 @@ class Expenses extends Component {
       expenseDate: new Date(),
       description: '',
       location: '',
-      category: [1, 'Travel']
+      category: {id:1, name: 'Travel'}
     }
 
     constructor(props){
@@ -43,7 +43,8 @@ class Expenses extends Component {
          method: 'POST',
          headers: {
            'Accept': 'application/json',
-           'Content-Type': 'applicetion/json'
+           'Content-Type': 'applicetion/json',
+           'Access-Control-Allow-Origin': 'http://localhost:3000'
          },
          body: JSON.stringify(this.item),  //Converting the values of the item variable into JSON
 
