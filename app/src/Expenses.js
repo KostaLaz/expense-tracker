@@ -44,7 +44,6 @@ class Expenses extends Component {
          headers: {
            'Accept': 'application/json',
            'Content-Type': 'applicetion/json',
-           'Access-Control-Allow-Origin': 'http://localhost:3000'
          },
          body: JSON.stringify(this.item),  //Converting the values of the item variable into JSON
 
