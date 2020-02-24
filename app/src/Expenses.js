@@ -1,76 +1,92 @@
-import React, { Component, useReducer } from 'react';
+import React, { Component } from 'react';
 import AppNav from './AppNav';
-import './App.css';
-import DatePicker from "react-datepicker";
+import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import {Table, Container, FormGroup, Form, Button, Input } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import './App.css';
+import { Table,Container,Input,Button,Label, FormGroup, Form} from 'reactstrap';
+import {Link} from 'react-router-dom';
 import Moment from 'react-moment';
 
+class Expsenses extends Component {
 
-class Expenses extends Component {
-
+  // {
+  //   "id": 100,
+  //   "expensedate": "2019-06-16T17:00:00Z",
+  //   "description": "New York Business Trip",
+  //   "location": "New York",
+  //   "category": {
+  //   "id": 1,
+  //   "name": "Travel"
+  //   }
+  //   },
+ 
     emptyItem = {
-      id: 104,
-      expenseDate: new Date(),
-      description: '',
-      location: '',
-      category: {id:1, name: 'Travel'}
+        description : '' ,
+        expensedate : new Date(),
+        id:104,
+        location : '',
+        category : {id:1 , name:'Travel'}
     }
 
+    
     constructor(props){
-        super(props)
+      super(props)
 
-        this.state = { 
-            date: new Date(),
-            isLoading: true,
-            expenses: [],
-            categories: [],
-            item: this.emptyItem
-            }
-        //When the constuctor gets called we automatically with this object onSubmit
-        this.handleSubmit = this.handleSubmit.bind(this);   
-        this.handleChange = this.handleChange.bind(this);     
-        this.handleDateChange = this.handleDateChange.bind(this);
-    }
+      this.state = { 
+        isLoading :false,
+        Categories:[],
+        Expsenses : [],
+        date :new Date(),
+        item : this.emptyItem
+       }
+
+       this.handleSubmit= this.handleSubmit.bind(this);
+       this.handleChange= this.handleChange.bind(this);
+       this.handleDateChange= this.handleDateChange.bind(this);
+
+    } 
 
     async handleSubmit(event){
-       
-       const item = this.state; // Creating a copy of 
-       
-       await fetch('api/expenses', {
+     
+      const item = this.state.item;
+    
 
-         method: 'POST',
-         headers: {
-           'Accept': 'application/json',
-           'Content-Type': 'applicetion/json',
-         },
-         body: JSON.stringify(this.item),  //Converting the values of the item variable into JSON
-
-       });
-          console.log(this.state);
-          event.preventDefault();
-          this.props.history.push("/expenses");   //Go back to the /expense route
-
+      await fetch(`/api/expenses`, {
+        method : 'POST',
+        headers : {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body : JSON.stringify(item),
+      });
+      
+      event.peventDefault();
+      this.props.history.push("/expenses");
     }
 
-    async handleChange(event){
-      const target = event.target;
-      const value = target.value;
+
+    handleChange(event){
+      const target= event.target;
+      const value= target.value;
       const name = target.name;
-      let item = {...this.state.item};
+      let item={...this.state.item};
       item[name] = value;
       this.setState({item});
-      console.log(this.state.item);
+      console.log(item);
+    }
 
-        }
 
-      async handleDateChange(date){
-        let item = {...this.state.item};
-        item.expenseDate = date;
-        this.setState({item});
-        console.log(item);
-        }
+    handleDateChange(date){
+      let item={...this.state.item};
+      item.expensedate= date;
+      this.setState({item});
+    
+    }
+
+
+
+
+
 
     async remove(id){
         await fetch(`/api/expenses/${id}` , {
@@ -81,122 +97,134 @@ class Expenses extends Component {
           }
 
         }).then(() => {
-          let updatedExpenses = [...this.state.expenses].filter(i => i.id !== id);
-          this.setState({expenses : updatedExpenses});
+          let updatedExpenses = [...this.state.Expsenses].filter(i => i.id !== id);
+          this.setState({Expsenses : updatedExpenses});
         });
 
     }
-  
 
-     async componentDidMount(){
-         const response = await fetch ('/api/categories');
-         const body = await response.json();
-         this.setState({categories: body, isLoading: false});
 
-         const responseExspenses = await fetch ('/api/expenses');
-         const bodyExpenses = await responseExspenses.json();
-         this.setState({expenses: bodyExpenses, isLoading: false});
-     }
-    
+    async componentDidMount() {
+ 
+     
+
+        const response= await fetch('/api/categories');
+        const body= await response.json();
+        this.setState({Categories : body , isLoading :false});
+
+
+        const responseExp= await fetch('/api/expenses');
+        const bodyExp = await responseExp.json();
+        this.setState({Expsenses : bodyExp , isLoading :false});
+        console.log(bodyExp);
+
+    }
+
+
+
+
 
     render() { 
-
-        const title  = <h3>Add Expense</h3>;
-        const {categories} = this.state;
-        const {expenses, isLoading} = this.state;
-
-        if(isLoading)
-          return(<div>Loadig...</div>)
-
-          let optionList =  
-            categories.map(category =>
-              <option value = {category.id} key={category.id}>
-                  {category.name}
-              </option>)
-
-              let rows = 
-                  expenses.map(expense =>
-                    <tr value={expense.id} key={expense.id}>
-                        <td>{expense.description}</td>
-                        <td>{expense.location}</td>
-                        <td><Moment date={expense.expenseDate} format="DD/MM/YYYY"/></td>
-                        <td>{expense.category.name}</td>
-                        <td><Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Delete</Button></td> 
+        const title =<h3>Add Expense</h3>;
+        const {Categories} =this.state;
+        const {Expsenses,isLoading} = this.state;
         
-                    </tr>)
 
-              
+        if (isLoading)
+            return(<div>Loading....</div>)
+        
+
+
+        let optionList  =
+                Categories.map( (category) =>
+                    <option value={category.id} key={category.id}>
+                                {category.name} 
+                    </option>
+                )
+        
+        let rows=
+            Expsenses.map( expense =>
+              <tr key={expense.id}>
+                <td>{expense.description}</td>
+                <td>{expense.location}</td>
+                <td><Moment date={expense.expensedate} format="YYYY/MM/DD"/></td>
+                <td>{expense.category.name}</td>
+                <td><Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Delete</Button></td>
+
+              </tr>
+
+
+            )
+        
 
         return (
-
             <div>
                 <AppNav/>
                 <Container>
-
-                 {title}
-
+                    {title}
+                    
                     <Form onSubmit={this.handleSubmit}>
-                      <FormGroup>
-                          <label htmlFor ="title">Title</label>
-                          <input type="text" name="title" id="title" onChange={this.handleChange}/>
-                      </FormGroup>
+                    <FormGroup>
+                        <Label for="description">Title</Label>
+                        <Input type="description" name="description" id="description" 
+                            onChange={this.handleChange} autoComplete="name"/>
+                    
+                    </FormGroup>
 
-                      <FormGroup>
-                          <label htmlFor ="category">Category</label>
+                    <FormGroup>
+                        <Label for="category" >Category</Label>
+                        <select onChange={this.handleChange}>
+                                {optionList}
+                        </select>
+                    
+                    </FormGroup>
 
-                          <select name="category" id="category" onChange={this.handleChange}>
-                              {optionList}
-                          </select>
-                          
-                      </FormGroup>
-
-                      <FormGroup>
-                          <label htmlFor ="city">Date</label>
-                          <DatePicker selected={this.state.item.expenseDate} onChange={this.handleDateChange}/>
-                      </FormGroup>
+                    <FormGroup>
+                        <Label for="city">Date</Label>
+                        <DatePicker    selected={this.state.item.expensedate}  onChange={this.handleDateChange} />
+                    </FormGroup>
 
                     <div className="row">
-                      <FormGroup className="col-md-4-sb-3">
-                          <label htmlFor ="location">Location</label>
-                          <input type="text" name="location" id="location" onChange={this.handleChange}/>
-                      </FormGroup>
-                      </div>
-
-                      <FormGroup>
-                          <Button color="primary" type="submit">Save</Button>{' '}
-                          <Button color="secondary" tag={Link} to="/">Cancel</Button>
-
-                      </FormGroup>
-
+                        <FormGroup className="col-md-4 mb-3">
+                        <Label for="location">Location</Label>
+                        <Input type="text" name="location" id="location" onChange={this.handleChange}/>
+                        </FormGroup>
                       
+                    </div>
+                    <FormGroup>
+                        <Button color="primary" type="submit">Save</Button>{' '}
+                        <Button color="secondary" tag={Link} to="/">Cancel</Button>
+                    </FormGroup>
                     </Form>
                 </Container>
+              
 
-                <Container>
-            
-                  <h3>Expense List</h3>
+          {''}
+              <Container>
+                <h3>Expense List</h3>
+                <Table className="mt-4">
+                <thead>
+                  <tr>
+                    <th width="30%">Description</th>
+                    <th width="10%">Location</th>
+                    <th> Date</th>
+                    <th> Category</th>
+                    <th width="10%">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                   {rows}
+                </tbody>
 
-                    <Table className="mt-4">
+                </Table>
+              </Container>
 
-                   <thead>  
-                    <tr>       
-                        <th width="20%">Description</th>
-                        <th width="20%">Location</th>
-                        <th width="20%">Date</th>
-                        <th width="20">Category</th>
-                        <th width="20%">Actions</th>
-                    </tr>
-                    </thead>
+          }
 
-                    <tbody>
-                        {rows}
-                    </tbody>
-                    </Table>
+        </div>
 
-                </Container>
-            </div>
-          );
+        );
     }
 }
  
-export default Expenses;
+export default Expsenses;
